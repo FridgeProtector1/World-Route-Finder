@@ -85,6 +85,7 @@ public class MapEngine {
     MessageCli.ROUTE_INFO.printMessage(path.toString());
     MessageCli.FUEL_INFO.printMessage(String.valueOf(totalFuel(path)));
     MessageCli.CONTINENT_INFO.printMessage(continentsVisitedSet.toString());
+    MessageCli.FUEL_CONTINENT_INFO.printMessage(mostFuelContinent(continentsVisitedSet).toString());
   }
 
   public List<Country> shortestPath(Country source, Country destination) {
@@ -144,5 +145,17 @@ public class MapEngine {
     }
     visited.add(new Continent(path.getLast().getContinent()));
     return visited;
+  }
+
+  public Continent mostFuelContinent(Set<Continent> continents) {
+    int mostFuel = -1;
+    Continent mostFuelContinent = null;
+    for (Continent continent : continents) {
+      if (mostFuel < continent.getFuelCost()) {
+        mostFuel = continent.getFuelCost();
+        mostFuelContinent = continent;
+      }
+    }
+    return mostFuelContinent;
   }
 }
