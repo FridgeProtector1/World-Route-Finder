@@ -41,11 +41,27 @@ public class MapEngine {
     }
   }
 
+  public Country getCountryByName(String countryName) throws InvalidCountryException {
+    countryName = Utils.capitalizeFirstLetterOfEachWord(countryName);
+    if (countryMap.containsKey(countryName)) {
+      return countryMap.get(countryName);
+    }
+    throw new InvalidCountryException(countryName);
+  }
+
   /** this method is invoked when the user run the command info-country. */
   public void showInfoCountry() {
-    MessageCli.INSERT_COUNTRY.printMessage();
-    String countryName = Utils.scanner.nextLine();
-    Country country = countryMap.get(countryName);
+    Country country = null;
+    String countryName;
+    while (country == null) {
+      MessageCli.INSERT_COUNTRY.printMessage();
+      countryName = Utils.scanner.nextLine();
+      try {
+        country = getCountryByName(countryName);
+      } catch (InvalidCountryException e) {
+        System.out.println(e.getMessage());
+      }
+    }
     MessageCli.COUNTRY_INFO.printMessage(
         country.getName(),
         country.getContinent(),
