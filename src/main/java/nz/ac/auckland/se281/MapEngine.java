@@ -81,8 +81,10 @@ public class MapEngine {
       return;
     }
     List<Country> path = shortestPath(source, destination);
+    Set<Continent> continentsVisitedSet = continentsVisited(path);
     MessageCli.ROUTE_INFO.printMessage(path.toString());
     MessageCli.FUEL_INFO.printMessage(String.valueOf(totalFuel(path)));
+    MessageCli.CONTINENT_INFO.printMessage(continentsVisitedSet.toString());
   }
 
   public List<Country> shortestPath(Country source, Country destination) {
@@ -123,5 +125,24 @@ public class MapEngine {
       totalFuel += path.get(i).getFuelCost();
     }
     return totalFuel;
+  }
+
+  public Set<Continent> continentsVisited(List<Country> path) {
+    Set<Continent> visited = new LinkedHashSet<>();
+    visited.add(new Continent(path.getFirst().getContinent()));
+
+    for (int i = 1; i < path.size() - 1; i++) {
+      Continent continent = new Continent(path.get(i).getContinent());
+      visited.add(continent);
+      if (visited.contains(continent)) {
+        for (Continent vistedContinent : visited) {
+          if (vistedContinent.equals(continent)) {
+            vistedContinent.addFuel(path.get(i).getFuelCost());
+          }
+        }
+      }
+    }
+    visited.add(new Continent(path.getLast().getContinent()));
+    return visited;
   }
 }
