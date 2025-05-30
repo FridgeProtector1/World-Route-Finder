@@ -42,7 +42,16 @@ public class MapEngine {
   }
 
   /** this method is invoked when the user run the command info-country. */
-  public void showInfoCountry() {}
+  public void showInfoCountry() {
+    MessageCli.INSERT_COUNTRY.printMessage();
+    String countryName = Utils.scanner.nextLine();
+    Country country = countryMap.get(countryName);
+    MessageCli.COUNTRY_INFO.printMessage(
+        country.getName(),
+        country.getContinent(),
+        String.valueOf(country.getFuelCost()),
+        adjNodes.get(country).toString());
+  }
 
   /** this method is invoked when the user run the command route. */
   public void showRoute() {}

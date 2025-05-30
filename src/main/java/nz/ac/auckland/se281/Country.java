@@ -23,4 +23,21 @@ public class Country {
   public int hashCode() {
     return name.hashCode();
   }
+
+  @Override
+  public String toString() {
+    return name;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getContinent() {
+    return continent;
+  }
+
+  public int getFuelCost() {
+    return fuelCost;
+  }
 }
