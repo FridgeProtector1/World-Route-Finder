@@ -49,19 +49,23 @@ public class MapEngine {
     throw new InvalidCountryException(countryName);
   }
 
-  /** this method is invoked when the user run the command info-country. */
-  public void showInfoCountry() {
-    Country country = null;
-    String countryName;
-    while (country == null) {
-      MessageCli.INSERT_COUNTRY.printMessage();
-      countryName = Utils.scanner.nextLine();
+  public Country validateCountry() {
+    Country country;
+    while (true) {
+      String countryName = Utils.scanner.nextLine();
       try {
         country = getCountryByName(countryName);
+        return country;
       } catch (InvalidCountryException e) {
         System.out.println(e.getMessage());
       }
     }
+  }
+
+  /** this method is invoked when the user run the command info-country. */
+  public void showInfoCountry() {
+    MessageCli.INSERT_COUNTRY.printMessage();
+    Country country = validateCountry();
     MessageCli.COUNTRY_INFO.printMessage(
         country.getName(),
         country.getContinent(),
@@ -70,5 +74,13 @@ public class MapEngine {
   }
 
   /** this method is invoked when the user run the command route. */
-  public void showRoute() {}
+  public void showRoute() {
+    MessageCli.INSERT_SOURCE.printMessage();
+    Country root = validateCountry();
+    MessageCli.INSERT_DESTINATION.printMessage();
+    Country destination = validateCountry();
+    if (root.equals(destination)) {
+      MessageCli.NO_CROSSBORDER_TRAVEL.printMessage();
+    }
+  }
 }
