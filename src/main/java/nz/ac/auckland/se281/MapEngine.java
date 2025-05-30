@@ -1,9 +1,6 @@
 package nz.ac.auckland.se281;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /** This class is the main entry point. */
 public class MapEngine {
@@ -76,11 +73,35 @@ public class MapEngine {
   /** this method is invoked when the user run the command route. */
   public void showRoute() {
     MessageCli.INSERT_SOURCE.printMessage();
-    Country root = validateCountry();
+    Country source = validateCountry();
     MessageCli.INSERT_DESTINATION.printMessage();
     Country destination = validateCountry();
-    if (root.equals(destination)) {
+    if (source.equals(destination)) {
       MessageCli.NO_CROSSBORDER_TRAVEL.printMessage();
+      return;
     }
+  }
+
+  public List<Country> shortestPath(Country source, Country destination) {
+    List<Country> visited = new ArrayList<>();
+    Queue<Country> queue = new LinkedList<>();
+    Map<Country, Country> previous = new HashMap<>();
+    queue.add(source);
+    visited.add(source);
+    while (!queue.isEmpty()) {
+      Country current = queue.poll();
+
+      if (current.equals(destination)) {
+        break;
+      }
+      for (Country adjacent : adjNodes.get(current)) {
+        if (!visited.contains(adjacent)) {
+          queue.add(adjacent);
+          visited.add(adjacent);
+          previous.put(adjacent, current);
+        }
+      }
+    }
+    return visited;
   }
 }
