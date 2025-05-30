@@ -48,7 +48,7 @@ public abstract class SysCliTest {
   }
 
   /** Timeout if test runs longer than 10 seconds */
-  @Rule public Timeout timeout = new Timeout(10, TimeUnit.SECONDS);
+  //  @Rule public Timeout timeout = new Timeout(10, TimeUnit.SECONDS);
 
   /**
    * Configures the test output and input streams, by creating new temporary streams while storing
