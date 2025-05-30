@@ -80,6 +80,7 @@ public class MapEngine {
       MessageCli.NO_CROSSBORDER_TRAVEL.printMessage();
       return;
     }
+    MessageCli.ROUTE_INFO.printMessage(shortestPath(source, destination).toString());
   }
 
   public List<Country> shortestPath(Country source, Country destination) {
@@ -102,6 +103,15 @@ public class MapEngine {
         }
       }
     }
-    return visited;
+
+    List<Country> path = new ArrayList<>();
+    Country step = destination;
+    while (step != source) {
+      path.add(step);
+      step = previous.get(step);
+    }
+    path.add(source);
+    Collections.reverse(path);
+    return path;
   }
 }
