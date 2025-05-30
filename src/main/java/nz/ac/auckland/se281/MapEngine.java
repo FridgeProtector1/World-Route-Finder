@@ -80,7 +80,9 @@ public class MapEngine {
       MessageCli.NO_CROSSBORDER_TRAVEL.printMessage();
       return;
     }
-    MessageCli.ROUTE_INFO.printMessage(shortestPath(source, destination).toString());
+    List<Country> path = shortestPath(source, destination);
+    MessageCli.ROUTE_INFO.printMessage(path.toString());
+    MessageCli.FUEL_INFO.printMessage(String.valueOf(totalFuel(path)));
   }
 
   public List<Country> shortestPath(Country source, Country destination) {
@@ -113,5 +115,13 @@ public class MapEngine {
     path.add(source);
     Collections.reverse(path);
     return path;
+  }
+
+  public int totalFuel(List<Country> path) {
+    int totalFuel = 0;
+    for (int i = 1; i < path.size() - 1; i++) {
+      totalFuel += path.get(i).getFuelCost();
+    }
+    return totalFuel;
   }
 }
