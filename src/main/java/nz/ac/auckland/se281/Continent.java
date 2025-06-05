@@ -1,8 +1,8 @@
 package nz.ac.auckland.se281;
 
 public class Continent {
-  String name;
-  int fuelCost = 0;
+  private String name;
+  private int fuelCost = 0;
 
   public Continent(String name) {
     this.name = name;

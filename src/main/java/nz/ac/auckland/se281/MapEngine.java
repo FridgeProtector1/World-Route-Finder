@@ -2,31 +2,34 @@ package nz.ac.auckland.se281;
 
 import java.util.*;
 
-/** This class is the main entry point. */
 public class MapEngine {
   private Map<Country, List<Country>> adjNodes;
   private Map<String, Country> countryMap;
 
   public MapEngine() {
-    // add other code here if you wan
     this.adjNodes = new HashMap<>();
     this.countryMap = new HashMap<>();
-    loadMap(); // keep this mehtod invocation
+    loadMap();
   }
 
-  /** invoked one time only when constructing the MapEngine class. */
   private void loadMap() {
 
     List<String> countries = Utils.readCountries();
     List<String> adjacencies = Utils.readAdjacencies();
 
+    // reads information from provided document and creates country class using the provided country
+    // and its details.
     for (String line : countries) {
       String[] countryParts = line.split(",");
       Country country = new Country(countryParts[0], countryParts[1], countryParts[2]);
+      // creates a map to relate the countries name and its class for later use so that a countries
+      // object can be identified using its String name.
       countryMap.put(countryParts[0], country);
       adjNodes.putIfAbsent(country, new ArrayList<>());
     }
 
+    // Places a countries neighbouring country objects in a arrayList within the adjNodes hashmap,
+    // using the country as the key.
     for (String line : adjacencies) {
       String[] adjParts = line.split(",");
       Country country = countryMap.get(adjParts[0]);
@@ -47,6 +50,8 @@ public class MapEngine {
   }
 
   public Country validateCountry() {
+    // reads the user input for country and continually prompts the user until a valid country is
+    // provided.
     Country country;
     while (true) {
       String countryName = Utils.scanner.nextLine();
@@ -59,8 +64,9 @@ public class MapEngine {
     }
   }
 
-  /** this method is invoked when the user run the command info-country. */
   public void showInfoCountry() {
+    // when a valid country is provided it prints the countries name, continent its in, fuel cost
+    // and its neighbouring countries.
     MessageCli.INSERT_COUNTRY.printMessage();
     Country country = validateCountry();
     MessageCli.COUNTRY_INFO.printMessage(
@@ -70,17 +76,18 @@ public class MapEngine {
         adjNodes.get(country).toString());
   }
 
-  /** this method is invoked when the user run the command route. */
   public void showRoute() {
+    // prints the route between the inputs root and destination
     MessageCli.INSERT_SOURCE.printMessage();
     Country source = validateCountry();
     MessageCli.INSERT_DESTINATION.printMessage();
     Country destination = validateCountry();
+    // determines if root and destination are the same country.
     if (source.equals(destination)) {
       MessageCli.NO_CROSSBORDER_TRAVEL.printMessage();
       return;
     }
-    List<Country> path = shortestPath(source, destination);
+    List<Country> path = findShortestPath(source, destination);
     Set<Continent> continentsVisitedSet = continentsVisited(path);
     MessageCli.ROUTE_INFO.printMessage(path.toString());
     MessageCli.FUEL_INFO.printMessage(String.valueOf(totalFuel(path)));
@@ -88,7 +95,7 @@ public class MapEngine {
     MessageCli.FUEL_CONTINENT_INFO.printMessage(mostFuelContinent(continentsVisitedSet).toString());
   }
 
-  public List<Country> shortestPath(Country source, Country destination) {
+  public List<Country> findShortestPath(Country source, Country destination) {
     List<Country> visited = new ArrayList<>();
     Queue<Country> queue = new LinkedList<>();
     Map<Country, Country> previous = new HashMap<>();
@@ -96,7 +103,6 @@ public class MapEngine {
     visited.add(source);
     while (!queue.isEmpty()) {
       Country current = queue.poll();
-
       if (current.equals(destination)) {
         break;
       }
@@ -129,12 +135,17 @@ public class MapEngine {
   }
 
   public Set<Continent> continentsVisited(List<Country> path) {
+    // adds and maintains the order of the continents that were traveled through in the journey,
+    // while also calculating the total fuel cost.
     Set<Continent> visited = new LinkedHashSet<>();
     visited.add(new Continent(path.getFirst().getContinent()));
 
     for (int i = 1; i < path.size() - 1; i++) {
       Continent continent = new Continent(path.get(i).getContinent());
       visited.add(continent);
+
+      // if country we are in is within a continent that we are or already have traveled through
+      // then its fuel cost is added to its respective continents sum.
       if (visited.contains(continent)) {
         for (Continent vistedContinent : visited) {
           if (vistedContinent.equals(continent)) {
@@ -149,6 +160,9 @@ public class MapEngine {
 
   public Continent mostFuelContinent(Set<Continent> continents) {
     int mostFuel = -1;
+
+    // iterates through all the continents that have been traveled through and returns the continent
+    // with the highest fuel cost.
     Continent mostFuelContinent = null;
     for (Continent continent : continents) {
       if (mostFuel < continent.getFuelCost()) {
