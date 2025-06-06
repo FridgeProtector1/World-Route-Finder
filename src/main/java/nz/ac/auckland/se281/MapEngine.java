@@ -123,7 +123,8 @@ public class MapEngine {
     Country step = destination;
     // using the "previous" hashmap we can trace down the shortest path backwards starting from the
     // destination node. The using the destination node, it provides its parent and using this
-    // parent in the next iteration we can find parents parent node, this continues until the root node is found.
+    // parent in the next iteration we can find parents parent node, this continues until the root
+    // node is found.
     while (step != source) {
       path.add(step);
       step = previous.get(step);
