@@ -1,4 +1,4 @@
-# World Route Finder (University Project)
+# World Route Finder
 
 A graph-based Java program that simulates optimal international delivery routing using the map from the classic strategy board game Risk!.
 
